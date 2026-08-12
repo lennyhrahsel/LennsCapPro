@@ -1,0 +1,52 @@
+name: Build Windows Desktop Executable (.exe)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows .exe Installer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Project Dependencies
+        run: npm install
+
+      - name: Install Electron & Electron Builder
+        run: npm install --save-dev electron electron-builder
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Package Windows .exe Installer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win --x64
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LENNSCAP-PRO-Windows-Installer
+          path: dist_electron/*.exe
+
+      - name: Publish to GitHub Releases
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist_electron/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
