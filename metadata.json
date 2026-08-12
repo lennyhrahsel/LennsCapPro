@@ -1,0 +1,12 @@
+{
+  "name": "LENNSCAP PRO",
+  "description": "HD PC screen recorder with adjustable resolution, audio source selection, audio-only mode, custom drag crop region, floating controls with timer, and simple video editor.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera",
+    "display-capture"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
